@@ -260,3 +260,4 @@ python -m app.check
 - **"The page has no readable text"** → the site renders with JavaScript; save the page as PDF and upload it.
 - **Answers often "not enough information"** → raise `TOP_K`, lower `CHUNK_SIZE`, or unset `MAX_DISTANCE`.
 - **Run from the project root** so `app` is importable and `.env` / `data/` resolve correctly.
+"# agri-knowledge-assistant" 
