@@ -1,0 +1,28 @@
+# Secrets
+.env
+
+# Generated data: uploads and FAISS index
+data/uploads/
+data/faiss_index/
+data/faiss_index.tmp/
+data/faiss_index.bak/
+data/faiss_index.backup-*/
+data/embedding_cache/
+*.faiss
+*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+.streamlit/secrets.toml
