@@ -1,0 +1,47 @@
+# Start everything:   docker compose up --build
+# Open the app:       http://localhost:8501   (API docs: http://localhost:8000/docs)
+# Stop:               docker compose down      (your data stays in the agri-data volume)
+
+services:
+  backend:
+    build: .
+    image: agri-knowledge-assistant:latest
+    container_name: agri-backend
+    env_file: .env                      # your API key and settings, read at run time
+    environment:
+      # Fixed paths inside the container (the volume below is mounted here).
+      FAISS_INDEX_DIR: /app/data/faiss_index
+      UPLOAD_DIR: /app/data/uploads
+      EMBEDDING_CACHE_DIR: /app/data/embedding_cache
+    volumes:
+      - agri-data:/app/data
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 15s
+      timeout: 6s
+      retries: 5
+      start_period: 20s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # lets the backend reach Ollama on your computer
+    restart: unless-stopped
+
+  frontend:
+    build: .                            # same image as the backend (built once, cached)
+    image: agri-knowledge-assistant:latest
+    container_name: agri-frontend
+    command: ["streamlit", "run", "ui/streamlit_app.py",
+              "--server.address", "0.0.0.0", "--server.port", "8501", "--server.headless", "true",
+              "--browser.gatherUsageStats", "false"]
+    environment:
+      API_BASE_URL: http://backend:8000   # the backend's name on the Docker network
+    ports:
+      - "8501:8501"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  agri-data:

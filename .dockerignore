@@ -1,0 +1,22 @@
+# Never copy secrets or local data into the image
+.env
+data/
+*.faiss
+*.pkl
+
+# Local environments, caches and tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.git/
+.gitignore
+.vscode/
+.idea/
+.DS_Store
+Dockerfile
+docker-compose.yml
+.dockerignore
